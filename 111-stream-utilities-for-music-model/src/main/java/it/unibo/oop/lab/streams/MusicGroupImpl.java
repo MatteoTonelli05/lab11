@@ -1,11 +1,16 @@
 package it.unibo.oop.lab.streams;
 
+import java.lang.StackWalker.Option;
+import java.security.KeyStore.Entry;
+import java.util.AbstractMap;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -31,42 +36,43 @@ public final class MusicGroupImpl implements MusicGroup {
 
     @Override
     public Stream<String> orderedSongNames() {
-        return null;
+        return songs.stream().map(i -> i.getSongName()).sorted();
     }
 
     @Override
     public Stream<String> albumNames() {
-        return null;
+        return songs.stream().filter(i -> i.getAlbumName().isPresent()).map(i -> i.getAlbumName().get()).distinct();
     }
 
     @Override
     public Stream<String> albumInYear(final int year) {
-        return null;
+        return albums.entrySet().stream().filter(i -> i.getValue() == year).map(i -> i.getKey());
     }
 
     @Override
     public int countSongs(final String albumName) {
-        return -1;
+        return (int)songs.stream().filter(a -> a.getAlbumName().equals(Optional.of(albumName))).count();
     }
 
     @Override
     public int countSongsInNoAlbum() {
-        return -1;
+        return (int)songs.stream().filter(s -> !s.getAlbumName().isPresent()).count();
     }
 
     @Override
     public OptionalDouble averageDurationOfSongs(final String albumName) {
-        return null;
+        return OptionalDouble.of(songs.stream().filter(s -> s.getAlbumName().equals(Optional.of(albumName))).map(s -> s.getDuration()).reduce((a, b) -> a + b).get() / 
+                songs.stream().filter(s -> s.getAlbumName().equals(Optional.of(albumName))).count());
     }
 
     @Override
     public Optional<String> longestSong() {
-        return null;
+        return songs.stream().reduce((a, b) -> (a.getDuration() > b.getDuration())? a : b).map(i -> i.getSongName());
     }
 
     @Override
     public Optional<String> longestAlbum() {
-        return null;
+         return null;
     }
 
     private static final class Song {
