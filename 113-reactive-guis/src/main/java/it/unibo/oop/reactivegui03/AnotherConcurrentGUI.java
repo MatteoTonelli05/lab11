@@ -1,5 +1,6 @@
 package it.unibo.oop.reactivegui03;
 
+import it.unibo.oop.reactivegui02.*;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -17,5 +18,33 @@ import javax.swing.SwingUtilities;
  * Third experiment with reactive gui.
  */
 @SuppressWarnings("PMD.AvoidPrintStackTrace")
-public final class AnotherConcurrentGUI extends JFrame {
+public final class AnotherConcurrentGUI extends ConcurrentGUI {
+    
+    public AnotherConcurrentGUI() {
+        super();
+        
+        final AnotherAgent agent = new AnotherAgent();
+        new Thread(agent).start();
+    }
+
+    public final class AnotherAgent extends ConcurrentGUI.Agent{
+        private int counter;
+
+        @Override
+        public void run() {
+            while (!stop) {
+                try {
+                    System.out.println("aaaaaaaaaaaaa");
+                    Thread.sleep(1000);
+                    counter++;
+                    if(counter>=10) {
+                        this.stopCounting();
+                    }
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+    }
 }
