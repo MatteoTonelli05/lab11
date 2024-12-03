@@ -8,7 +8,6 @@ import java.awt.LayoutManager;
 import java.awt.Toolkit;
 import java.util.Arrays;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -41,21 +40,21 @@ public final class LambdaFilter extends JFrame {
          * Commands.
          */
         IDENTITY("No modifications", Function.identity()),
-        LOWERCASE("to lower case", a -> a.toLowerCase()),
-        COUNTCHAR("number of chars", s -> Long.toString(s.chars().filter(x -> x!=' ' && x!='\n').count())),
-        COUNTLINES("number of lines", s -> Long.toString(s.chars().filter(c -> c == '\n').count() + 1 )),
+        LOWERCASE("to lower case", String::toLowerCase),
+        COUNTCHAR("number of chars", s -> Long.toString(s.chars().filter(x -> x != ' ' && x != '\n').count())),
+        COUNTLINES("number of lines", s -> Long.toString(s.chars().filter(c -> c == '\n').count() + 1)),
         SORTWORDS("sorted words", s -> Arrays.stream(s.split("(\\s|\\p{Punct})+"))
-                .sorted((a, b) -> a.compareTo(b))
+                .sorted(String::compareTo)
                 .reduce((a, b) -> a.concat("\n")
                 .concat(b)).get()),
         COUNTWORDS("count words", s -> Arrays.stream(s.split("(\\s|\\p{Punct})+"))
                 .distinct()
                 .map(i -> i.concat(" -> ")
-                .concat( Arrays.stream(s.split("(\\s|\\p{Punct})+")).filter(x -> x.equals(i)).count()+""))
+                .concat(Long.toString(Arrays.stream(s.split("(\\s|\\p{Punct})+")).filter(x -> x.equals(i)).count())))
                 .reduce((a, b) -> a.concat("\n")
                 .concat(b)).get()
         );
-        
+
         private final String commandName;
         private final Function<String, String> fun;
 
@@ -78,7 +77,6 @@ public final class LambdaFilter extends JFrame {
 
     private LambdaFilter() {
         super("Lambda filter GUI");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         final JPanel panel1 = new JPanel();
         final LayoutManager layout = new BorderLayout();
         panel1.setLayout(layout);
