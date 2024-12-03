@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,8 +21,6 @@ public class ConcurrentGUI extends JFrame {
     private static final double WIDTH_PERC = 0.2;
     private static final double HEIGHT_PERC = 0.1;
     private final JLabel display = new JLabel();
-    private final Agent agent = new Agent();
-    
     
     /**
      * constructor.
@@ -41,18 +40,11 @@ public class ConcurrentGUI extends JFrame {
         panel.add(down);
         super.getContentPane().add(panel);
         super.setVisible(true);
+        final Agent agent = new Agent();
         new Thread(agent).start();
         stop.addActionListener((e) -> agent.stopCounting());
         up.addActionListener((e) -> agent.upCounter());
         down.addActionListener((e) -> agent.downCounter());
-    }
-
-    /** 
-     * ignore.
-     * @return agent
-     */
-    public Agent getAgent() {
-        return agent;
     }
 
     /**
