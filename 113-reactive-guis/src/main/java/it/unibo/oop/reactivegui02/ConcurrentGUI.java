@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
