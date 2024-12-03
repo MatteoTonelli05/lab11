@@ -34,7 +34,6 @@ public final class AnotherConcurrentGUI extends ConcurrentGUI {
         public void run() {
             while (!stop) {
                 try {
-                    System.out.println("aaaaaaaaaaaaa");
                     Thread.sleep(1000);
                     counter++;
                     if(counter>=10) {
