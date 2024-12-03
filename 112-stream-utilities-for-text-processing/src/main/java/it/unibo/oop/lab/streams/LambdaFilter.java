@@ -42,17 +42,19 @@ public final class LambdaFilter extends JFrame {
          */
         IDENTITY("No modifications", Function.identity()),
         LOWERCASE("to lower case", a -> a.toLowerCase()),
-        COUNTCHAR("number of chars", s -> Long.toString(s.chars().count())),
+        COUNTCHAR("number of chars", s -> Long.toString(s.chars().filter(x -> x!=' ' && x!='\n').count())),
         COUNTLINES("number of lines", s -> Long.toString(s.chars().filter(c -> c == '\n').count() + 1 )),
         SORTWORDS("sorted words", s -> Arrays.stream(s.split("(\\s|\\p{Punct})+"))
                 .sorted((a, b) -> a.compareTo(b))
                 .reduce((a, b) -> a.concat("\n")
                 .concat(b)).get()),
         COUNTWORDS("count words", s -> Arrays.stream(s.split("(\\s|\\p{Punct})+"))
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-                .entrySet().stream()
-                .map(e -> e.getKey() + " -> " + e.getValue())
-                .collect(Collectors.joining("\n")));
+                .distinct()
+                .map(i -> i.concat(" -> ")
+                .concat( Arrays.stream(s.split("(\\s|\\p{Punct})+")).filter(x -> x.equals(i)).count()+""))
+                .reduce((a, b) -> a.concat("\n")
+                .concat(b)).get()
+        );
         
         private final String commandName;
         private final Function<String, String> fun;
@@ -70,6 +72,8 @@ public final class LambdaFilter extends JFrame {
         public String translate(final String s) {
             return fun.apply(s);
         }
+
+
     }
 
     private LambdaFilter() {
